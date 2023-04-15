@@ -24,13 +24,15 @@ public class Article {
     private LocalDateTime createdAt;
 
     @Builder
-    public Article(
-            String title,
-            String content,
-            LocalDateTime createdAt
-    ) {
+    public Article(String title, String content, LocalDateTime createdAt) {
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
+    }
+
+    public void update(Article updatedArticle) {
+        this.title = updatedArticle.getTitle();
+        this.content = updatedArticle.getContent();
+        this.createdAt = updatedArticle.getCreatedAt();
     }
 }

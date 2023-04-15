@@ -7,4 +7,6 @@ public interface ArticleService {
     void register(ArticleRequestDto requestDto);
 
     ArticleResponseDto getArticle(Long articleId);
+
+    void updateArticle(Long articleId, ArticleRequestDto requestDto);
 }
