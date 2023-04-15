@@ -2,12 +2,15 @@ package sopt.org.secondAssignment.article.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sopt.org.secondAssignment.article.service.ArticleService;
 import sopt.org.secondAssignment.article.service.dto.ArticleRequestDto;
+import sopt.org.secondAssignment.article.service.dto.ArticleResponseDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +24,12 @@ public class ArticleController {
     ) {
         articleService.register(requestDto);
         return ResponseEntity.ok("정상적으로 저장되었습니다.");
+    }
+
+    @GetMapping("/{articleId}")
+    public ResponseEntity<ArticleResponseDto> getArticle(
+            @PathVariable final Long articleId
+    ) {
+        return ResponseEntity.ok(articleService.getArticle(articleId));
     }
 }
