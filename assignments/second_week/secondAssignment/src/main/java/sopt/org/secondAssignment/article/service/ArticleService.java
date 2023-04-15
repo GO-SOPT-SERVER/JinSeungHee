@@ -9,4 +9,6 @@ public interface ArticleService {
     ArticleResponseDto getArticle(Long articleId);
 
     void updateArticle(Long articleId, ArticleRequestDto requestDto);
+
+    void deleteArticle(Long articleId);
 }

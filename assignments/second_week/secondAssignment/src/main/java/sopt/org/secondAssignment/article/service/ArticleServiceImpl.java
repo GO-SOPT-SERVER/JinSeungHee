@@ -31,4 +31,10 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         article.update(requestDto.toEntity());
     }
+
+    @Override
+    public void deleteArticle(final Long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        articleRepository.delete(article);
+    }
 }

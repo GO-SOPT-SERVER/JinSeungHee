@@ -2,6 +2,7 @@ package sopt.org.secondAssignment.article.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,5 +40,11 @@ public class ArticleController {
                                                 @RequestBody ArticleRequestDto requestDto) {
         articleService.updateArticle(articleId, requestDto);
         return ResponseEntity.ok("정상적으로 수정되었습니다.");
+    }
+
+    @DeleteMapping("/{articleId}")
+    public ResponseEntity<String> deleteArticle(@PathVariable final Long articleId) {
+        articleService.deleteArticle(articleId);
+        return ResponseEntity.ok("정상적으로 삭제되었습니다.");
     }
 }
