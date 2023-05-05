@@ -1,5 +1,8 @@
 package assignment.ThirdWeek.post.service;
 
+import static assignment.ThirdWeek.common.ExceptionMessage.DATA_NOT_FOUND;
+
+import assignment.ThirdWeek.exception.NotFoundException;
 import assignment.ThirdWeek.post.domain.Post;
 import assignment.ThirdWeek.post.domain.PostRepository;
 import assignment.ThirdWeek.post.service.dto.PostRegisterDto;
@@ -26,10 +29,10 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostResponseDto get(Long postId) {
         Post post = findPost(postId);
-        return new PostResponseDto(post);
+        return PostResponseDto.of(post);
     }
 
     public Post findPost(Long postId) {
-        return postRepository.findById(postId).orElseThrow(IllegalArgumentException::new);
+        return postRepository.findById(postId).orElseThrow(() -> new NotFoundException(DATA_NOT_FOUND.getMessage()));
     }
 }

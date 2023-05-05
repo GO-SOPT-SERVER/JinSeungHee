@@ -1,5 +1,8 @@
 package assignment.ThirdWeek.user.service;
 
+import static assignment.ThirdWeek.common.ExceptionMessage.USER_NOT_FOUND;
+
+import assignment.ThirdWeek.exception.NotFoundException;
 import assignment.ThirdWeek.user.domain.User;
 import assignment.ThirdWeek.user.domain.UserRepository;
 import assignment.ThirdWeek.user.service.dto.UserRegisterDto;
@@ -19,6 +22,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
     }
 }
