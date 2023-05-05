@@ -1,5 +1,9 @@
 package assignment.ThirdWeek.post.ui;
 
+import static assignment.ThirdWeek.common.ResponseMessage.SUCCESS_GET_MESSAGE;
+import static assignment.ThirdWeek.common.ResponseMessage.SUCCESS_SAVE_MESSAGE;
+
+import assignment.ThirdWeek.common.dto.ApiResponse;
 import assignment.ThirdWeek.post.service.PostService;
 import assignment.ThirdWeek.post.service.dto.PostRegisterDto;
 import assignment.ThirdWeek.post.service.dto.PostResponseDto;
@@ -20,14 +24,14 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid PostRegisterDto postRegisterDto) {
+    public ResponseEntity<ApiResponse> register(@RequestBody @Valid PostRegisterDto postRegisterDto) {
         postService.register(postRegisterDto);
-        return ResponseEntity.ok("등록이 완료되었습니다.");
+        return ResponseEntity.ok(ApiResponse.success(SUCCESS_SAVE_MESSAGE.getMessage()));
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponseDto> get(@PathVariable final Long postId) {
+    public ResponseEntity<ApiResponse> get(@PathVariable final Long postId) {
         PostResponseDto responseDto = postService.get(postId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(ApiResponse.success(SUCCESS_GET_MESSAGE.getMessage(), responseDto));
     }
 }

@@ -1,5 +1,8 @@
 package assignment.ThirdWeek.user.ui;
 
+import static assignment.ThirdWeek.common.ResponseMessage.SUCCESS_SAVE_MESSAGE;
+
+import assignment.ThirdWeek.common.dto.ApiResponse;
 import assignment.ThirdWeek.user.service.UserService;
 import assignment.ThirdWeek.user.service.dto.UserRegisterDto;
 import javax.validation.Valid;
@@ -17,9 +20,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(
+    public ResponseEntity<ApiResponse> register(
             @RequestBody @Valid UserRegisterDto userRegisterDto) {
         userService.register(userRegisterDto);
-        return ResponseEntity.ok("등록이 완료되었습니다.");
+        return ResponseEntity.ok(ApiResponse.success(SUCCESS_SAVE_MESSAGE.getMessage()));
     }
 }
