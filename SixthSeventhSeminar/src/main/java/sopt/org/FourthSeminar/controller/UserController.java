@@ -37,7 +37,8 @@ public class UserController {
     @Operation(summary = "유저 로그인", description = "로그인합니다.")
     public ApiResponse<UserLoginResponseDto> login(@RequestBody @Valid final UserLoginRequestDto request) {
         final Long userId = userService.login(request);
-        final String token = jwtService.issuedToken(String.valueOf(userId));
-        return ApiResponse.success(Success.LOGIN_SUCCESS, UserLoginResponseDto.of(userId, token));
+        final String accessToken = jwtService.issuedAccessToken(String.valueOf(userId));
+        final String refreshToken = jwtService.issuedRefreshToken(String.valueOf(userId));
+        return ApiResponse.success(Success.LOGIN_SUCCESS, UserLoginResponseDto.of(userId, accessToken, refreshToken));
     }
 }
