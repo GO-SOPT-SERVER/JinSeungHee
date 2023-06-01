@@ -5,20 +5,27 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import sopt.org.FourthSeminar.exception.Error;
 import sopt.org.FourthSeminar.exception.model.UnauthorizedException;
 
+import javax.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.time.Duration;
+import java.util.Base64;
+import java.util.Date;
+
 @Service
+@RequiredArgsConstructor
 public class JwtService {
     @Value("${jwt.secret}")
     private String jwtSecret;
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     @PostConstruct
     protected void init() {
@@ -27,24 +34,36 @@ public class JwtService {
     }
 
     // JWT 토큰 발급
-    public String issuedToken(String userId) {
+    private String issuedToken(final String userId, final Long duration, final String type) {
         final Date now = new Date();
 
-        // 클레임 생성
         final Claims claims = Jwts.claims()
-                .setSubject("access_token")
+                .setSubject(type)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + 120 * 60 * 1000L));
-
-        //private claim 등록
-        claims.put("userId", userId);
+                .setExpiration(new Date(now.getTime() + duration));
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .signWith(getSigningKey())
                 .compact();
+
     }
+
+    // JWT 액세스 토큰 발급
+    public String issuedAccessToken(String userId) {
+        final long duration = 120 * 60 * 1000L;
+        return issuedToken(userId, duration, "access_token");
+    }
+
+    // JWT 리프레시 토큰 발급
+    public String issuedRefreshToken(String userId) {
+        final Long duration = 120 * 60 * 30 * 1000L;
+        String refreshToken = issuedToken(userId, duration, "refresh_token");
+        redisTemplate.opsForValue().set(String.valueOf(userId), refreshToken, Duration.ofMillis(duration));
+        return refreshToken;
+    }
+
 
     private Key getSigningKey() {
         final byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
